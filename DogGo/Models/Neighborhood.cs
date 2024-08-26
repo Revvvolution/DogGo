@@ -1,4 +1,6 @@
-﻿namespace DogGo.Models
+﻿using System.ComponentModel;
+
+namespace DogGo.Models
 {
     public class Neighborhood
     {
