@@ -133,12 +133,53 @@ namespace DogGo.Repositories
 
         public void UpdateDog(Dog dog)
         {
-            return;
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            UPDATE Dog
+                            SET 
+                                [Name] = @name, 
+                                Breed = @breed, 
+                                OwnerId = @ownerId, 
+                                Notes = @notes, 
+                                ImageUrl = @imageUrl
+                            WHERE Id = @id";
+
+                    cmd.Parameters.AddWithValue("@name", dog.Name);
+                    cmd.Parameters.AddWithValue("@breed", dog.Breed);
+                    cmd.Parameters.AddWithValue("@ownerId", dog.OwnerId);
+                    cmd.Parameters.AddWithValue("@notes", string.IsNullOrEmpty(dog.Notes) ? (object)DBNull.Value : dog.Notes);
+                    cmd.Parameters.AddWithValue("@imageUrl", string.IsNullOrEmpty(dog.ImageUrl) ? (object)DBNull.Value : dog.ImageUrl);
+                    cmd.Parameters.AddWithValue("@id", dog.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
-        public void DeleteDog(int id)
+
+        public void DeleteDog(int dogId)
         {
-            return;
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Dog
+                            WHERE Id = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", dogId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
 
