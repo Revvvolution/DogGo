@@ -1,5 +1,6 @@
 ﻿using DogGo.Models;
 using DogGo.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -16,6 +17,8 @@ namespace DogGo.Controllers
         }
 
         // GET: DogsController
+        // Authorization required for this action
+        [Authorize]
         public ActionResult Index()
         {
             int ownerId = GetCurrentUserId();
@@ -32,6 +35,8 @@ namespace DogGo.Controllers
         }
 
         // GET: Dogs/Create
+        // Authorization required for this action
+        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -57,11 +62,14 @@ namespace DogGo.Controllers
         }
 
         // GET: Dogs/Edit/Dog.Id
+        [Authorize]
         public ActionResult Edit(int id)
         {
+            int currentOwner = GetCurrentUserId();
+
             Dog dog = _dogRepo.GetDogById(id);
 
-            if (dog == null)
+            if (dog.OwnerId != currentOwner)
             {
                 return NotFound();
             }
@@ -76,6 +84,8 @@ namespace DogGo.Controllers
         {
             try
             {
+                dog.OwnerId = GetCurrentUserId();
+
                 _dogRepo.UpdateDog(dog);
 
                 return RedirectToAction("Index");
