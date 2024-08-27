@@ -123,9 +123,9 @@ namespace DogGo.Repositories
                     cmd.Parameters.AddWithValue("@notes", string.IsNullOrEmpty(dog.Notes) ? (object)DBNull.Value : dog.Notes);
                     cmd.Parameters.AddWithValue("@imageUrl", string.IsNullOrEmpty(dog.ImageUrl) ? (object)DBNull.Value : dog.ImageUrl);
 
-                    int id = (int)cmd.ExecuteScalar();
+                    int newDogId = (int)cmd.ExecuteScalar();
 
-                    dog.Id = id;
+                    dog.Id = newDogId;
                 }
             }
         }
